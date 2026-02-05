@@ -18,46 +18,68 @@ public class RepositoryScannerService
         _logger = logger;
     }
 
-    public async Task<Scan> ScanRepositoryAsync(string repositoryPath)
+    public async Task<Scan> ScanRepositoryAsync(string repositoryPath, IProgressReporter? progressReporter = null)
     {
-        _logger.LogInformation("Starting repository scan at {Path}", repositoryPath);
-
-        // Validate repository path
-        if (!Directory.Exists(repositoryPath))
+        try
         {
-            throw new DirectoryNotFoundException($"Repository path not found: {repositoryPath}");
+            _logger.LogInformation("Starting repository scan at {Path}", repositoryPath);
+            await progressReporter?.ReportProgress("Initializing", "Starting repository scan...", 0)!;
+
+            // Validate repository path
+            if (!Directory.Exists(repositoryPath))
+            {
+                throw new DirectoryNotFoundException($"Repository path not found: {repositoryPath}");
+            }
+
+            // Get git commit hash
+            await progressReporter?.ReportProgress("Git", "Reading git commit information...", 5)!;
+            var (commitHash, shortHash) = await GetGitCommitHashAsync(repositoryPath);
+
+            // Create scan
+            await progressReporter?.ReportProgress("Database", "Creating scan record...", 10)!;
+            var scan = new Scan
+            {
+                ScanDate = DateTime.UtcNow,
+                GitCommitHash = commitHash,
+                ShortCommitHash = shortHash,
+                RepositoryPath = repositoryPath
+            };
+
+            _context.Scans.Add(scan);
+            await _context.SaveChangesAsync();
+
+            // Find solutions
+            await progressReporter?.ReportProgress("Solutions", "Scanning for solution files...", 20)!;
+            await FindSolutionsAsync(scan, repositoryPath);
+            await progressReporter?.ReportProgress("Solutions", "Solution files processed", 35)!;
+
+            // Find projects
+            await progressReporter?.ReportProgress("Projects", "Scanning for project files...", 40)!;
+            await FindProjectsAsync(scan, repositoryPath);
+            await progressReporter?.ReportProgress("Projects", "Project files processed", 60)!;
+
+            // Extract assemblies
+            await progressReporter?.ReportProgress("Assemblies", "Extracting assembly information...", 70)!;
+            await ExtractAssembliesAsync(scan);
+            await progressReporter?.ReportProgress("Assemblies", "Assembly information extracted", 80)!;
+
+            // Build dependency graph
+            await progressReporter?.ReportProgress("Dependencies", "Building dependency graph...", 85)!;
+            await BuildDependencyGraphAsync(scan, repositoryPath);
+            await progressReporter?.ReportProgress("Dependencies", "Dependency graph complete", 95)!;
+
+            _logger.LogInformation("Repository scan completed. Scan ID: {ScanId}", scan.Id);
+            await progressReporter?.ReportProgress("Complete", "Scan completed successfully!", 100)!;
+            await progressReporter?.ReportComplete(true, $"Scan completed successfully. Scan ID: {scan.Id}")!;
+
+            return scan;
         }
-
-        // Get git commit hash
-        var (commitHash, shortHash) = await GetGitCommitHashAsync(repositoryPath);
-
-        // Create scan
-        var scan = new Scan
+        catch (Exception ex)
         {
-            ScanDate = DateTime.UtcNow,
-            GitCommitHash = commitHash,
-            ShortCommitHash = shortHash,
-            RepositoryPath = repositoryPath
-        };
-
-        _context.Scans.Add(scan);
-        await _context.SaveChangesAsync();
-
-        // Find solutions
-        await FindSolutionsAsync(scan, repositoryPath);
-
-        // Find projects
-        await FindProjectsAsync(scan, repositoryPath);
-
-        // Extract assemblies
-        await ExtractAssembliesAsync(scan);
-
-        // Build dependency graph
-        await BuildDependencyGraphAsync(scan, repositoryPath);
-
-        _logger.LogInformation("Repository scan completed. Scan ID: {ScanId}", scan.Id);
-
-        return scan;
+            _logger.LogError(ex, "Error during repository scan");
+            await progressReporter?.ReportError($"Scan failed: {ex.Message}")!;
+            throw;
+        }
     }
 
     private async Task<(string commitHash, string shortHash)> GetGitCommitHashAsync(string repositoryPath)

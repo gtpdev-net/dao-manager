@@ -1,11 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using DAO.Manager.Data;
 using DAO.Manager.Services;
+using DAO.Manager.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add SignalR
+builder.Services.AddSignalR();
 
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -37,5 +41,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Map SignalR hub
+app.MapHub<ScanProgressHub>("/hubs/scanprogress");
 
 app.Run();

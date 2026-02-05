@@ -15,6 +15,7 @@ A C# .NET 8 web application that scans .NET repositories to discover and analyze
 - **Database Storage**: Stores all scan data in SQL Server using Entity Framework Core
 - **Git Integration**: Captures git commit hash for each scan to track repository state
 - **Web UI**: Provides intuitive web interface to view and explore scan results
+- **Real-time Progress**: SignalR-based live progress updates during repository scanning
 
 ## Technology Stack
 
@@ -22,6 +23,7 @@ A C# .NET 8 web application that scans .NET repositories to discover and analyze
 - **ASP.NET Core MVC**: Web framework for user interface
 - **Entity Framework Core 8**: ORM for database access
 - **SQL Server**: Database for persistent storage
+- **SignalR**: WebSocket-based real-time communication for progress updates
 - **Bootstrap 5**: UI framework for responsive design
 
 ## Database Schema
@@ -78,8 +80,11 @@ The application uses the following main entities:
 1. Click "Start New Scan" on the home page
 2. Enter the full path to the repository you want to scan
 3. Click "Start Scan"
-4. Wait for the scan to complete (progress is shown in logs)
-5. View the scan results
+4. Watch real-time progress updates as the scan runs in the background
+   - See the current phase (Solutions, Projects, Assemblies, Dependencies)
+   - Monitor percentage completion
+   - View detailed progress log
+5. When complete, click "View Scan Results" to see the detailed scan data
 
 ### Viewing Scan Results
 
