@@ -1,4 +1,4 @@
-@model IEnumerable<DAO.Manager.Models.Dependency>
+@model IEnumerable<dynamic>
 
 @{
     ViewData["Title"] = "Dependencies";
@@ -23,19 +23,10 @@
         {
             <tr>
                 <td><span class="badge bg-info">@item.SourceType</span></td>
-                <td>
-                    @if (item.SourceSolution != null)
-                    {
-                        <text>@item.SourceSolution.Name</text>
-                    }
-                    else if (item.SourceProject != null)
-                    {
-                        <text>@item.SourceProject.Name</text>
-                    }
-                </td>
+                <td>@item.SourceName</td>
                 <td><i class="bi bi-arrow-right"></i> →</td>
                 <td><span class="badge bg-success">@item.TargetType</span></td>
-                <td>@item.TargetProject.Name</td>
+                <td>@item.TargetName</td>
             </tr>
         }
     </tbody>

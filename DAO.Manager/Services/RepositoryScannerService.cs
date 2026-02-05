@@ -213,7 +213,6 @@ public class RepositoryScannerService
             Name = name,
             FilePath = filePath,
             GuidDeterminationMethod = guidMethod,
-            NumberOfReferencedProjects = projectCount,
             IsSingleProjectSolution = isSingleProject
         };
     }
@@ -360,7 +359,6 @@ public class RepositoryScannerService
             Name = name,
             FilePath = filePath,
             GuidDeterminationMethod = guidMethod,
-            NumberOfReferencedProjects = projectReferences,
             TargetFramework = targetFramework ?? "N/A",
             ProjectStyle = projectStyle
         };
@@ -441,6 +439,7 @@ public class RepositoryScannerService
         return new Assembly
         {
             ScanId = scanId,
+            ProjectId = project.Id,
             UniqueIdentifier = uniqueId,
             Name = assemblyName,
             AssemblyFileName = assemblyFileName,
@@ -493,15 +492,13 @@ public class RepositoryScannerService
                         
                         if (projectByPath.TryGetValue(absolutePath, out var targetProject))
                         {
-                            var dependency = new Dependency
+                            var solutionProject = new SolutionProject
                             {
                                 ScanId = scan.Id,
-                                SourceType = "Solution",
-                                TargetType = "Project",
-                                SourceSolutionId = solution.Id,
-                                TargetProjectId = targetProject.Id
+                                SolutionId = solution.Id,
+                                ProjectId = targetProject.Id
                             };
-                            _context.Dependencies.Add(dependency);
+                            _context.SolutionProjects.Add(solutionProject);
                         }
                     }
                 }
@@ -543,15 +540,13 @@ public class RepositoryScannerService
                     
                     if (projectByPath.TryGetValue(absolutePath, out var targetProject))
                     {
-                        var dependency = new Dependency
+                        var dependency = new ProjectDependency
                         {
                             ScanId = scan.Id,
-                            SourceType = "Project",
-                            TargetType = "Project",
                             SourceProjectId = project.Id,
                             TargetProjectId = targetProject.Id
                         };
-                        _context.Dependencies.Add(dependency);
+                        _context.ProjectDependencies.Add(dependency);
                     }
                 }
             }

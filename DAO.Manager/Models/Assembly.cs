@@ -4,6 +4,7 @@ public class Assembly
 {
     public int Id { get; set; }
     public int ScanId { get; set; }
+    public int ProjectId { get; set; }
     public string UniqueIdentifier { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string AssemblyFileName { get; set; } = string.Empty;
@@ -14,6 +15,7 @@ public class Assembly
     
     // Navigation properties
     public Scan Scan { get; set; } = null!;
+    public Project Project { get; set; } = null!;
     public ICollection<AssemblyDependency> DependenciesFrom { get; set; } = new List<AssemblyDependency>();
     public ICollection<AssemblyDependency> DependenciesTo { get; set; } = new List<AssemblyDependency>();
 }

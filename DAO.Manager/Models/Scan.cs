@@ -13,4 +13,9 @@ public class Scan
     public ICollection<Solution> Solutions { get; set; } = new List<Solution>();
     public ICollection<Project> Projects { get; set; } = new List<Project>();
     public ICollection<Assembly> Assemblies { get; set; } = new List<Assembly>();
+    public ICollection<PackageReference> PackageReferences { get; set; } = new List<PackageReference>();
+    public ICollection<AssemblyReference> AssemblyReferences { get; set; } = new List<AssemblyReference>();
+    public ICollection<SolutionProject> SolutionProjects { get; set; } = new List<SolutionProject>();
+    public ICollection<ProjectDependency> ProjectDependencies { get; set; } = new List<ProjectDependency>();
+    public ICollection<AssemblyDependency> AssemblyDependencies { get; set; } = new List<AssemblyDependency>();
 }

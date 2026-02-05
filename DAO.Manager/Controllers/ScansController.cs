@@ -230,15 +230,38 @@ public class ScansController : Controller
             return NotFound();
         }
 
-        var dependencies = await _context.Dependencies
-            .Include(d => d.SourceSolution)
-            .Include(d => d.SourceProject)
-            .Include(d => d.TargetProject)
-            .Where(d => d.ScanId == id)
+        // Load both SolutionProjects and ProjectDependencies
+        var solutionProjects = await _context.SolutionProjects
+            .Include(sp => sp.Solution)
+            .Include(sp => sp.Project)
+            .Where(sp => sp.ScanId == id)
             .ToListAsync();
 
+        var projectDependencies = await _context.ProjectDependencies
+            .Include(pd => pd.SourceProject)
+            .Include(pd => pd.TargetProject)
+            .Where(pd => pd.ScanId == id)
+            .ToListAsync();
+
+        // Create a combined view model
+        var combinedDependencies = new List<object>();
+        combinedDependencies.AddRange(solutionProjects.Select(sp => new 
+        {
+            SourceType = "Solution",
+            SourceName = sp.Solution.Name,
+            TargetType = "Project",
+            TargetName = sp.Project.Name
+        }));
+        combinedDependencies.AddRange(projectDependencies.Select(pd => new 
+        {
+            SourceType = "Project",
+            SourceName = pd.SourceProject.Name,
+            TargetType = "Project",
+            TargetName = pd.TargetProject.Name
+        }));
+
         ViewBag.Scan = scan;
-        return View(dependencies);
+        return View(combinedDependencies);
     }
 
     // GET: Scans/AssemblyDependencies/5

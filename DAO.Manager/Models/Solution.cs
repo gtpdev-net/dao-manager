@@ -9,10 +9,9 @@ public class Solution
     public string Name { get; set; } = string.Empty;
     public string FilePath { get; set; } = string.Empty;
     public string GuidDeterminationMethod { get; set; } = string.Empty;
-    public int NumberOfReferencedProjects { get; set; }
     public bool IsSingleProjectSolution { get; set; }
     
     // Navigation properties
     public Scan Scan { get; set; } = null!;
-    public ICollection<Dependency> DependenciesFrom { get; set; } = new List<Dependency>();
+    public ICollection<SolutionProject> SolutionProjects { get; set; } = new List<SolutionProject>();
 }

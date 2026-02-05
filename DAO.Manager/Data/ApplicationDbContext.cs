@@ -14,7 +14,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<Solution> Solutions { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<Assembly> Assemblies { get; set; }
-    public DbSet<Dependency> Dependencies { get; set; }
+    public DbSet<PackageReference> PackageReferences { get; set; }
+    public DbSet<AssemblyReference> AssemblyReferences { get; set; }
+    public DbSet<SolutionProject> SolutionProjects { get; set; }
+    public DbSet<ProjectDependency> ProjectDependencies { get; set; }
     public DbSet<AssemblyDependency> AssemblyDependencies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -87,22 +90,94 @@ public class ApplicationDbContext : DbContext
                 .WithMany(s => s.Assemblies)
                 .HasForeignKey(e => e.ScanId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(e => e.Project)
+                .WithMany(p => p.Assemblies)
+                .HasForeignKey(e => e.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
                 
             entity.HasIndex(e => e.ScanId);
+            entity.HasIndex(e => e.ProjectId);
             entity.HasIndex(e => e.UniqueIdentifier);
         });
 
-        // Configure Dependency
-        modelBuilder.Entity<Dependency>(entity =>
+        // Configure PackageReference
+        modelBuilder.Entity<PackageReference>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.SourceType).HasMaxLength(50).IsRequired();
-            entity.Property(e => e.TargetType).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.PackageName).HasMaxLength(255).IsRequired();
+            entity.Property(e => e.Version).HasMaxLength(50).IsRequired();
             
-            entity.HasOne(e => e.SourceSolution)
-                .WithMany(s => s.DependenciesFrom)
-                .HasForeignKey(e => e.SourceSolutionId)
-                .OnDelete(DeleteBehavior.NoAction);
+            entity.HasOne(e => e.Scan)
+                .WithMany(s => s.PackageReferences)
+                .HasForeignKey(e => e.ScanId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            entity.HasOne(e => e.Project)
+                .WithMany(p => p.PackageReferences)
+                .HasForeignKey(e => e.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            entity.HasIndex(e => e.ScanId);
+            entity.HasIndex(e => e.ProjectId);
+            entity.HasIndex(e => e.PackageName);
+        });
+
+        // Configure AssemblyReference
+        modelBuilder.Entity<AssemblyReference>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.AssemblyName).HasMaxLength(255).IsRequired();
+            entity.Property(e => e.HintPath).HasMaxLength(1000);
+            entity.Property(e => e.Version).HasMaxLength(50);
+            
+            entity.HasOne(e => e.Scan)
+                .WithMany(s => s.AssemblyReferences)
+                .HasForeignKey(e => e.ScanId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            entity.HasOne(e => e.Project)
+                .WithMany(p => p.AssemblyReferences)
+                .HasForeignKey(e => e.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            entity.HasIndex(e => e.ScanId);
+            entity.HasIndex(e => e.ProjectId);
+        });
+
+        // Configure SolutionProject
+        modelBuilder.Entity<SolutionProject>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            
+            entity.HasOne(e => e.Scan)
+                .WithMany(s => s.SolutionProjects)
+                .HasForeignKey(e => e.ScanId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            entity.HasOne(e => e.Solution)
+                .WithMany(s => s.SolutionProjects)
+                .HasForeignKey(e => e.SolutionId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            entity.HasOne(e => e.Project)
+                .WithMany(p => p.SolutionProjects)
+                .HasForeignKey(e => e.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            entity.HasIndex(e => e.ScanId);
+            entity.HasIndex(e => new { e.SolutionId, e.ProjectId }).IsUnique();
+        });
+
+        // Configure ProjectDependency
+        modelBuilder.Entity<ProjectDependency>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            
+            entity.HasOne(e => e.Scan)
+                .WithMany(s => s.ProjectDependencies)
+                .HasForeignKey(e => e.ScanId)
+                .OnDelete(DeleteBehavior.Cascade);
                 
             entity.HasOne(e => e.SourceProject)
                 .WithMany(p => p.DependenciesFrom)
@@ -115,6 +190,7 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
                 
             entity.HasIndex(e => e.ScanId);
+            entity.HasIndex(e => new { e.SourceProjectId, e.TargetProjectId }).IsUnique();
         });
 
         // Configure AssemblyDependency
@@ -133,6 +209,7 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
                 
             entity.HasIndex(e => e.ScanId);
+            entity.HasIndex(e => new { e.SourceAssemblyId, e.TargetAssemblyId }).IsUnique();
         });
     }
 }
