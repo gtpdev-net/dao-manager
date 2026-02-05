@@ -1,0 +1,51 @@
+@model IEnumerable<DAO.Manager.Models.Scan>
+
+@{
+    ViewData["Title"] = "Repository Scans";
+}
+
+<h1>Repository Scans</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">New Scan</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Scan Date</th>
+            <th>Repository Path</th>
+            <th>Git Commit</th>
+            <th>Solutions</th>
+            <th>Projects</th>
+            <th>Assemblies</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ScanDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@item.RepositoryPath</td>
+                <td>
+                    <span title="@item.GitCommitHash">@item.ShortCommitHash</span>
+                </td>
+                <td>
+                    <a asp-action="Solutions" asp-route-id="@item.Id">View</a>
+                </td>
+                <td>
+                    <a asp-action="Projects" asp-route-id="@item.Id">View</a>
+                </td>
+                <td>
+                    <a asp-action="Assemblies" asp-route-id="@item.Id">View</a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Dependencies" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Dependencies</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

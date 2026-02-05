@@ -1,0 +1,43 @@
+@model IEnumerable<DAO.Manager.Models.AssemblyDependency>
+
+@{
+    ViewData["Title"] = "Assembly Dependencies";
+    var scan = ViewBag.Scan as DAO.Manager.Models.Scan;
+}
+
+<h1>Assembly Dependencies</h1>
+<p class="text-muted">Scan from: @scan?.ScanDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Source Assembly</th>
+            <th></th>
+            <th>Target Assembly</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <strong>@item.SourceAssembly.Name</strong>
+                    <br />
+                    <small class="text-muted">@item.SourceAssembly.AssemblyFileName</small>
+                </td>
+                <td><i class="bi bi-arrow-right"></i> →</td>
+                <td>
+                    <strong>@item.TargetAssembly.Name</strong>
+                    <br />
+                    <small class="text-muted">@item.TargetAssembly.AssemblyFileName</small>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Details" asp-route-id="@scan?.Id" class="btn btn-secondary">Back to Scan Details</a>
+    <a asp-action="Dependencies" asp-route-id="@scan?.Id" class="btn btn-primary">View Project Dependencies</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to Scans</a>
+</div>

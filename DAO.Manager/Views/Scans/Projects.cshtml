@@ -1,0 +1,40 @@
+@model IEnumerable<DAO.Manager.Models.Project>
+
+@{
+    ViewData["Title"] = "Projects";
+    var scan = ViewBag.Scan as DAO.Manager.Models.Scan;
+}
+
+<h1>Projects</h1>
+<p class="text-muted">Scan from: @scan?.ScanDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>File Path</th>
+            <th>Target Framework</th>
+            <th>Project Style</th>
+            <th>Visual Studio GUID</th>
+            <th>Referenced Projects</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td><small>@item.FilePath</small></td>
+                <td>@item.TargetFramework</td>
+                <td>@item.ProjectStyle</td>
+                <td><code>@item.VisualStudioGuid</code></td>
+                <td>@item.NumberOfReferencedProjects</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Details" asp-route-id="@scan?.Id" class="btn btn-secondary">Back to Scan Details</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to Scans</a>
+</div>
