@@ -1,4 +1,4 @@
-@model DAO.Manager.Models.Scan
+@model DAO.Manager.Models.ScanDetailsViewModel
 
 @{
     ViewData["Title"] = "Scan Details";
@@ -10,25 +10,25 @@
     <div class="card-body">
         <dl class="row">
             <dt class="col-sm-3">Scan Date</dt>
-            <dd class="col-sm-9">@Model.ScanDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</dd>
+            <dd class="col-sm-9">@Model.Scan.ScanDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</dd>
 
             <dt class="col-sm-3">Repository Path</dt>
-            <dd class="col-sm-9">@Model.RepositoryPath</dd>
+            <dd class="col-sm-9">@Model.Scan.RepositoryPath</dd>
 
             <dt class="col-sm-3">Git Commit Hash</dt>
             <dd class="col-sm-9">
-                <code>@Model.GitCommitHash</code>
-                <small class="text-muted">(@Model.ShortCommitHash)</small>
+                <code>@Model.Scan.GitCommitHash</code>
+                <small class="text-muted">(@Model.Scan.ShortCommitHash)</small>
             </dd>
 
             <dt class="col-sm-3">Solutions Found</dt>
-            <dd class="col-sm-9">@Model.Solutions.Count</dd>
+            <dd class="col-sm-9">@Model.SolutionsCount</dd>
 
             <dt class="col-sm-3">Projects Found</dt>
-            <dd class="col-sm-9">@Model.Projects.Count</dd>
+            <dd class="col-sm-9">@Model.ProjectsCount</dd>
 
             <dt class="col-sm-3">Assemblies Found</dt>
-            <dd class="col-sm-9">@Model.Assemblies.Count</dd>
+            <dd class="col-sm-9">@Model.AssembliesCount</dd>
         </dl>
     </div>
 </div>
@@ -40,7 +40,7 @@
             <div class="card-body">
                 <h5 class="card-title">Solutions</h5>
                 <p class="card-text">View all solution files found</p>
-                <a asp-action="Solutions" asp-route-id="@Model.Id" class="btn btn-primary">View Solutions</a>
+                <a asp-action="Solutions" asp-route-id="@Model.Scan.Id" class="btn btn-primary">View Solutions</a>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
             <div class="card-body">
                 <h5 class="card-title">Projects</h5>
                 <p class="card-text">View all C# projects found</p>
-                <a asp-action="Projects" asp-route-id="@Model.Id" class="btn btn-primary">View Projects</a>
+                <a asp-action="Projects" asp-route-id="@Model.Scan.Id" class="btn btn-primary">View Projects</a>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
             <div class="card-body">
                 <h5 class="card-title">Assemblies</h5>
                 <p class="card-text">View all assemblies</p>
-                <a asp-action="Assemblies" asp-route-id="@Model.Id" class="btn btn-primary">View Assemblies</a>
+                <a asp-action="Assemblies" asp-route-id="@Model.Scan.Id" class="btn btn-primary">View Assemblies</a>
             </div>
         </div>
     </div>
@@ -67,7 +67,7 @@
             <div class="card-body">
                 <h5 class="card-title">Dependencies</h5>
                 <p class="card-text">View dependency graph</p>
-                <a asp-action="Dependencies" asp-route-id="@Model.Id" class="btn btn-primary">View Dependencies</a>
+                <a asp-action="Dependencies" asp-route-id="@Model.Scan.Id" class="btn btn-primary">View Dependencies</a>
             </div>
         </div>
     </div>
@@ -75,5 +75,5 @@
 
 <div>
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    <a asp-action="Delete" asp-route-id="@Model.Scan.Id" class="btn btn-danger">Delete</a>
 </div>

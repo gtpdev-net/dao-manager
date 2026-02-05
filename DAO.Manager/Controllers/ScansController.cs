@@ -45,9 +45,6 @@ public class ScansController : Controller
         }
 
         var scan = await _context.Scans
-            .Include(s => s.Solutions)
-            .Include(s => s.Projects)
-            .Include(s => s.Assemblies)
             .FirstOrDefaultAsync(m => m.Id == id);
 
         if (scan == null)
@@ -55,7 +52,16 @@ public class ScansController : Controller
             return NotFound();
         }
 
-        return View(scan);
+        // Get counts separately instead of loading all data
+        var viewModel = new ScanDetailsViewModel
+        {
+            Scan = scan,
+            SolutionsCount = await _context.Solutions.CountAsync(s => s.ScanId == id),
+            ProjectsCount = await _context.Projects.CountAsync(p => p.ScanId == id),
+            AssembliesCount = await _context.Assemblies.CountAsync(a => a.ScanId == id)
+        };
+
+        return View(viewModel);
     }
 
     // GET: Scans/Create
