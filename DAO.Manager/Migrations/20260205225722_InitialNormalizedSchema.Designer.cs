@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAO.Manager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260205224254_InitialNormalizedSchema")]
+    [Migration("20260205225722_InitialNormalizedSchema")]
     partial class InitialNormalizedSchema
     {
         /// <inheritdoc />
@@ -45,24 +45,21 @@ namespace DAO.Manager.Migrations
 
                     b.Property<string>("OutputType")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ProjectFilePath")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("ProjectStyle")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("ScanId")
-                        .HasColumnType("int");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("TargetFramework")
                         .IsRequired()
@@ -76,9 +73,9 @@ namespace DAO.Manager.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("Name");
 
-                    b.HasIndex("ScanId");
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("UniqueIdentifier");
 
@@ -93,9 +90,6 @@ namespace DAO.Manager.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ScanId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SourceAssemblyId")
                         .HasColumnType("int");
 
@@ -103,8 +97,6 @@ namespace DAO.Manager.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ScanId");
 
                     b.HasIndex("TargetAssemblyId");
 
@@ -128,13 +120,10 @@ namespace DAO.Manager.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("HintPath")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ScanId")
                         .HasColumnType("int");
 
                     b.Property<string>("Version")
@@ -144,8 +133,6 @@ namespace DAO.Manager.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("ScanId");
 
                     b.ToTable("AssemblyReferences");
                 });
@@ -169,9 +156,6 @@ namespace DAO.Manager.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ScanId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Version")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -183,7 +167,8 @@ namespace DAO.Manager.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.HasIndex("ScanId");
+                    b.HasIndex("ProjectId", "PackageName", "Version")
+                        .IsUnique();
 
                     b.ToTable("PackageReferences");
                 });
@@ -198,13 +183,13 @@ namespace DAO.Manager.Migrations
 
                     b.Property<string>("FilePath")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("GuidDeterminationMethod")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -213,8 +198,8 @@ namespace DAO.Manager.Migrations
 
                     b.Property<string>("ProjectStyle")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("ScanId")
                         .HasColumnType("int");
@@ -234,9 +219,12 @@ namespace DAO.Manager.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FilePath");
+
                     b.HasIndex("ScanId");
 
-                    b.HasIndex("UniqueIdentifier");
+                    b.HasIndex("ScanId", "UniqueIdentifier")
+                        .IsUnique();
 
                     b.ToTable("Projects");
                 });
@@ -288,8 +276,8 @@ namespace DAO.Manager.Migrations
 
                     b.Property<string>("RepositoryPath")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<DateTime>("ScanDate")
                         .HasColumnType("datetime2");
@@ -300,6 +288,8 @@ namespace DAO.Manager.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
 
                     b.HasIndex("ScanDate");
 
@@ -316,13 +306,13 @@ namespace DAO.Manager.Migrations
 
                     b.Property<string>("FilePath")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("GuidDeterminationMethod")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsSingleProjectSolution")
                         .HasColumnType("bit");
@@ -348,7 +338,8 @@ namespace DAO.Manager.Migrations
 
                     b.HasIndex("ScanId");
 
-                    b.HasIndex("UniqueIdentifier");
+                    b.HasIndex("ScanId", "UniqueIdentifier")
+                        .IsUnique();
 
                     b.ToTable("Solutions");
                 });
@@ -390,25 +381,11 @@ namespace DAO.Manager.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAO.Manager.Models.Scan", "Scan")
-                        .WithMany("Assemblies")
-                        .HasForeignKey("ScanId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("Project");
-
-                    b.Navigation("Scan");
                 });
 
             modelBuilder.Entity("DAO.Manager.Models.AssemblyDependency", b =>
                 {
-                    b.HasOne("DAO.Manager.Models.Scan", null)
-                        .WithMany("AssemblyDependencies")
-                        .HasForeignKey("ScanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DAO.Manager.Models.Assembly", "SourceAssembly")
                         .WithMany("DependenciesFrom")
                         .HasForeignKey("SourceAssemblyId")
@@ -434,15 +411,7 @@ namespace DAO.Manager.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAO.Manager.Models.Scan", "Scan")
-                        .WithMany("AssemblyReferences")
-                        .HasForeignKey("ScanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Project");
-
-                    b.Navigation("Scan");
                 });
 
             modelBuilder.Entity("DAO.Manager.Models.PackageReference", b =>
@@ -453,15 +422,7 @@ namespace DAO.Manager.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAO.Manager.Models.Scan", "Scan")
-                        .WithMany("PackageReferences")
-                        .HasForeignKey("ScanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Project");
-
-                    b.Navigation("Scan");
                 });
 
             modelBuilder.Entity("DAO.Manager.Models.Project", b =>
@@ -530,7 +491,7 @@ namespace DAO.Manager.Migrations
                     b.HasOne("DAO.Manager.Models.Solution", "Solution")
                         .WithMany("SolutionProjects")
                         .HasForeignKey("SolutionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -564,14 +525,6 @@ namespace DAO.Manager.Migrations
 
             modelBuilder.Entity("DAO.Manager.Models.Scan", b =>
                 {
-                    b.Navigation("Assemblies");
-
-                    b.Navigation("AssemblyDependencies");
-
-                    b.Navigation("AssemblyReferences");
-
-                    b.Navigation("PackageReferences");
-
                     b.Navigation("ProjectDependencies");
 
                     b.Navigation("Projects");

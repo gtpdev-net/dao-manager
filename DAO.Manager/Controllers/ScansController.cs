@@ -58,7 +58,7 @@ public class ScansController : Controller
             Scan = scan,
             SolutionsCount = await _context.Solutions.CountAsync(s => s.ScanId == id),
             ProjectsCount = await _context.Projects.CountAsync(p => p.ScanId == id),
-            AssembliesCount = await _context.Assemblies.CountAsync(a => a.ScanId == id)
+            AssembliesCount = await _context.Assemblies.CountAsync(a => a.Project.ScanId == id)
         };
 
         return View(viewModel);
@@ -208,7 +208,8 @@ public class ScansController : Controller
         }
 
         var assemblies = await _context.Assemblies
-            .Where(a => a.ScanId == id)
+            .Include(a => a.Project)
+            .Where(a => a.Project.ScanId == id)
             .OrderBy(a => a.Name)
             .ToListAsync();
 
@@ -280,8 +281,10 @@ public class ScansController : Controller
 
         var assemblyDependencies = await _context.AssemblyDependencies
             .Include(ad => ad.SourceAssembly)
+                .ThenInclude(a => a.Project)
             .Include(ad => ad.TargetAssembly)
-            .Where(ad => ad.ScanId == id)
+                .ThenInclude(a => a.Project)
+            .Where(ad => ad.SourceAssembly.Project.ScanId == id)
             .ToListAsync();
 
         ViewBag.Scan = scan;

@@ -438,7 +438,6 @@ public class RepositoryScannerService
 
         return new Assembly
         {
-            ScanId = scanId,
             ProjectId = project.Id,
             UniqueIdentifier = uniqueId,
             Name = assemblyName,
@@ -561,7 +560,10 @@ public class RepositoryScannerService
 
     private async Task BuildAssemblyDependenciesAsync(Scan scan)
     {
-        var assemblies = await _context.Assemblies.Where(a => a.ScanId == scan.Id).ToListAsync();
+        var assemblies = await _context.Assemblies
+            .Include(a => a.Project)
+            .Where(a => a.Project.ScanId == scan.Id)
+            .ToListAsync();
         var projects = await _context.Projects.Where(p => p.ScanId == scan.Id).ToListAsync();
         
         var assemblyByProjectPath = assemblies.ToDictionary(a => a.ProjectFilePath, StringComparer.OrdinalIgnoreCase);
@@ -595,7 +597,6 @@ public class RepositoryScannerService
                     {
                         var dependency = new AssemblyDependency
                         {
-                            ScanId = scan.Id,
                             SourceAssemblyId = assembly.Id,
                             TargetAssemblyId = targetAssembly.Id
                         };

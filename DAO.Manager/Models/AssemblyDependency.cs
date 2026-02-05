@@ -3,7 +3,6 @@ namespace DAO.Manager.Models;
 public class AssemblyDependency
 {
     public int Id { get; set; }
-    public int ScanId { get; set; }
     public int SourceAssemblyId { get; set; }
     public int TargetAssemblyId { get; set; }
     

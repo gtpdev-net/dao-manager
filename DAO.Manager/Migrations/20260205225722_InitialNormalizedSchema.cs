@@ -20,7 +20,7 @@ namespace DAO.Manager.Migrations
                     ScanDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     GitCommitHash = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ShortCommitHash = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    RepositoryPath = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    RepositoryPath = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -38,10 +38,10 @@ namespace DAO.Manager.Migrations
                     UniqueIdentifier = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     VisualStudioGuid = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    FilePath = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    GuidDeterminationMethod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    GuidDeterminationMethod = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     TargetFramework = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    ProjectStyle = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    ProjectStyle = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,8 +64,8 @@ namespace DAO.Manager.Migrations
                     UniqueIdentifier = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     VisualStudioGuid = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    FilePath = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    GuidDeterminationMethod = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    GuidDeterminationMethod = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     IsSingleProjectSolution = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -85,15 +85,14 @@ namespace DAO.Manager.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ScanId = table.Column<int>(type: "int", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     UniqueIdentifier = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     AssemblyFileName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    OutputType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ProjectStyle = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    OutputType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    ProjectStyle = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     TargetFramework = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ProjectFilePath = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
+                    ProjectFilePath = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,11 +103,6 @@ namespace DAO.Manager.Migrations
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Assemblies_Scans_ScanId",
-                        column: x => x.ScanId,
-                        principalTable: "Scans",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -117,10 +111,9 @@ namespace DAO.Manager.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ScanId = table.Column<int>(type: "int", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     AssemblyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    HintPath = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    HintPath = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     Version = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
@@ -132,12 +125,6 @@ namespace DAO.Manager.Migrations
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AssemblyReferences_Scans_ScanId",
-                        column: x => x.ScanId,
-                        principalTable: "Scans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -146,7 +133,6 @@ namespace DAO.Manager.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ScanId = table.Column<int>(type: "int", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     PackageName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Version = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
@@ -159,12 +145,6 @@ namespace DAO.Manager.Migrations
                         name: "FK_PackageReferences_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PackageReferences_Scans_ScanId",
-                        column: x => x.ScanId,
-                        principalTable: "Scans",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -230,8 +210,7 @@ namespace DAO.Manager.Migrations
                         name: "FK_SolutionProjects_Solutions_SolutionId",
                         column: x => x.SolutionId,
                         principalTable: "Solutions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -240,7 +219,6 @@ namespace DAO.Manager.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ScanId = table.Column<int>(type: "int", nullable: false),
                     SourceAssemblyId = table.Column<int>(type: "int", nullable: false),
                     TargetAssemblyId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -258,13 +236,12 @@ namespace DAO.Manager.Migrations
                         principalTable: "Assemblies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AssemblyDependencies_Scans_ScanId",
-                        column: x => x.ScanId,
-                        principalTable: "Scans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Assemblies_Name",
+                table: "Assemblies",
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Assemblies_ProjectId",
@@ -272,19 +249,9 @@ namespace DAO.Manager.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Assemblies_ScanId",
-                table: "Assemblies",
-                column: "ScanId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Assemblies_UniqueIdentifier",
                 table: "Assemblies",
                 column: "UniqueIdentifier");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AssemblyDependencies_ScanId",
-                table: "AssemblyDependencies",
-                column: "ScanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AssemblyDependencies_SourceAssemblyId_TargetAssemblyId",
@@ -303,11 +270,6 @@ namespace DAO.Manager.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AssemblyReferences_ScanId",
-                table: "AssemblyReferences",
-                column: "ScanId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PackageReferences_PackageName",
                 table: "PackageReferences",
                 column: "PackageName");
@@ -318,9 +280,10 @@ namespace DAO.Manager.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PackageReferences_ScanId",
+                name: "IX_PackageReferences_ProjectId_PackageName_Version",
                 table: "PackageReferences",
-                column: "ScanId");
+                columns: new[] { "ProjectId", "PackageName", "Version" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectDependencies_ScanId",
@@ -339,14 +302,25 @@ namespace DAO.Manager.Migrations
                 column: "TargetProjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_FilePath",
+                table: "Projects",
+                column: "FilePath");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Projects_ScanId",
                 table: "Projects",
                 column: "ScanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_UniqueIdentifier",
+                name: "IX_Projects_ScanId_UniqueIdentifier",
                 table: "Projects",
-                column: "UniqueIdentifier");
+                columns: new[] { "ScanId", "UniqueIdentifier" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Scans_CreatedAt",
+                table: "Scans",
+                column: "CreatedAt");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Scans_ScanDate",
@@ -375,9 +349,10 @@ namespace DAO.Manager.Migrations
                 column: "ScanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Solutions_UniqueIdentifier",
+                name: "IX_Solutions_ScanId_UniqueIdentifier",
                 table: "Solutions",
-                column: "UniqueIdentifier");
+                columns: new[] { "ScanId", "UniqueIdentifier" },
+                unique: true);
         }
 
         /// <inheritdoc />
