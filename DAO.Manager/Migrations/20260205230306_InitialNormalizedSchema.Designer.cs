@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAO.Manager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260205225722_InitialNormalizedSchema")]
+    [Migration("20260205230306_InitialNormalizedSchema")]
     partial class InitialNormalizedSchema
     {
         /// <inheritdoc />
@@ -453,7 +453,7 @@ namespace DAO.Manager.Migrations
                     b.HasOne("DAO.Manager.Models.Project", "TargetProject")
                         .WithMany("DependenciesTo")
                         .HasForeignKey("TargetProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Scan");

@@ -173,7 +173,7 @@ public class ApplicationDbContext : DbContext
             entity.HasOne(e => e.TargetProject)
                 .WithMany(p => p.DependenciesTo)
                 .HasForeignKey(e => e.TargetProjectId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
                 
             entity.HasIndex(e => e.ScanId);
             entity.HasIndex(e => new { e.SourceProjectId, e.TargetProjectId }).IsUnique();

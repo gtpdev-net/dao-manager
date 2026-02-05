@@ -171,8 +171,7 @@ namespace DAO.Manager.Migrations
                         name: "FK_ProjectDependencies_Projects_TargetProjectId",
                         column: x => x.TargetProjectId,
                         principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProjectDependencies_Scans_ScanId",
                         column: x => x.ScanId,

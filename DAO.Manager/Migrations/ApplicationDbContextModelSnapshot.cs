@@ -450,7 +450,7 @@ namespace DAO.Manager.Migrations
                     b.HasOne("DAO.Manager.Models.Project", "TargetProject")
                         .WithMany("DependenciesTo")
                         .HasForeignKey("TargetProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Scan");
