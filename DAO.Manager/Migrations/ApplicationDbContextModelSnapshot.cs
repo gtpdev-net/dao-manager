@@ -390,7 +390,7 @@ namespace DAO.Manager.Migrations
                     b.HasOne("DAO.Manager.Models.Scan", "Scan")
                         .WithMany("Assemblies")
                         .HasForeignKey("ScanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Project");

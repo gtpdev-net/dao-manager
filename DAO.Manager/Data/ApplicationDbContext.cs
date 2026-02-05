@@ -89,7 +89,7 @@ public class ApplicationDbContext : DbContext
             entity.HasOne(e => e.Scan)
                 .WithMany(s => s.Assemblies)
                 .HasForeignKey(e => e.ScanId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
             
             entity.HasOne(e => e.Project)
                 .WithMany(p => p.Assemblies)

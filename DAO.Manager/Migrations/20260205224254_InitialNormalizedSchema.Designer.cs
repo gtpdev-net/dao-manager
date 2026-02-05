@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAO.Manager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260205222819_NormalizedDatabaseSchema")]
-    partial class NormalizedDatabaseSchema
+    [Migration("20260205224254_InitialNormalizedSchema")]
+    partial class InitialNormalizedSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -393,7 +393,7 @@ namespace DAO.Manager.Migrations
                     b.HasOne("DAO.Manager.Models.Scan", "Scan")
                         .WithMany("Assemblies")
                         .HasForeignKey("ScanId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Project");

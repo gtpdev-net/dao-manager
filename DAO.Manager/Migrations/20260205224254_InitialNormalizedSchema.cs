@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAO.Manager.Migrations
 {
     /// <inheritdoc />
-    public partial class NormalizedDatabaseSchema : Migration
+    public partial class InitialNormalizedSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -108,8 +108,7 @@ namespace DAO.Manager.Migrations
                         name: "FK_Assemblies_Scans_ScanId",
                         column: x => x.ScanId,
                         principalTable: "Scans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
