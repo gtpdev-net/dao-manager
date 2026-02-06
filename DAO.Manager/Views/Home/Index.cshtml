@@ -4,7 +4,7 @@
 
 <div class="text-center">
     <h1 class="display-4">DAO.Manager</h1>
-    <p class="lead">Scan and analyze .NET repositories for solutions, projects, and dependencies</p>
+    <p class="lead">Scan and analyze .NET repositories for solutions, projects, and assemblies</p>
 </div>
 
 <div class="row mt-5">
@@ -15,7 +15,7 @@
                     <i class="bi bi-search"></i> Start New Scan
                 </h5>
                 <p class="card-text">
-                    Scan a repository to discover all solutions, projects, assemblies, and their dependencies.
+                    Scan a repository to discover all solutions, projects, and assemblies.
                 </p>
                 <a asp-controller="Scans" asp-action="Create" class="btn btn-primary">Create New Scan</a>
             </div>
@@ -28,7 +28,7 @@
                     <i class="bi bi-list-ul"></i> View Scans
                 </h5>
                 <p class="card-text">
-                    Browse existing scans and view detailed information about solutions, projects, and dependencies.
+                    Browse existing scans and view detailed information about solutions, projects, and assemblies.
                 </p>
                 <a asp-controller="Scans" asp-action="Index" class="btn btn-primary">View All Scans</a>
             </div>
@@ -45,7 +45,6 @@
                     <li><strong>Solution Discovery:</strong> Finds all .sln files and extracts metadata</li>
                     <li><strong>Project Analysis:</strong> Analyzes all .csproj files and identifies target frameworks</li>
                     <li><strong>Assembly Identification:</strong> Determines output assemblies (DLLs, EXEs)</li>
-                    <li><strong>Dependency Mapping:</strong> Builds complete dependency graphs at both project and assembly levels</li>
                     <li><strong>Database Storage:</strong> Stores all data in SQL Server using Entity Framework Core</li>
                     <li><strong>Git Integration:</strong> Captures git commit hash for each scan</li>
                 </ul>

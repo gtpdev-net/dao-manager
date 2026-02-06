@@ -1,6 +1,6 @@
 # DAO.Manager
 
-A C# .NET 8 web application that scans .NET repositories to discover and analyze solutions, projects, assemblies, and their dependencies. This application replicates the functionality of the PowerShell scripts found in the `project-analysis` folder, storing data in a SQL Server database using Entity Framework Core.
+A simplified C# .NET 8 web application that scans .NET repositories to discover and analyze solutions, projects, and assemblies. This application stores basic scan data in a SQL Server database using Entity Framework Core, focusing on fundamental repository analysis.
 
 ## Features
 
@@ -9,12 +9,10 @@ A C# .NET 8 web application that scans .NET repositories to discover and analyze
   - Target frameworks
   - Project style (SDK-style vs Legacy)
   - Visual Studio GUIDs
-  - Project references
 - **Assembly Identification**: Determines output assemblies (DLLs, EXEs) from project configurations
-- **Dependency Mapping**: Builds complete dependency graphs at both project and assembly levels
 - **Database Storage**: Stores all scan data in SQL Server using Entity Framework Core
 - **Git Integration**: Captures git commit hash for each scan to track repository state
-- **Web UI**: Provides intuitive web interface to view and explore scan results
+- **Web UI**: Provides intuitive web interface to create scans and view scan list
 - **Real-time Progress**: SignalR-based live progress updates during repository scanning
 
 ## Technology Stack
@@ -34,8 +32,6 @@ The application uses the following main entities:
 - **Solution**: Solution file metadata (.sln)
 - **Project**: Project file metadata (.csproj)
 - **Assembly**: Output assembly information (DLL/EXE)
-- **Dependency**: Project-level dependencies
-- **AssemblyDependency**: Assembly-level dependencies
 
 ## Getting Started
 
@@ -81,20 +77,18 @@ The application uses the following main entities:
 2. Enter the full path to the repository you want to scan
 3. Click "Start Scan"
 4. Watch real-time progress updates as the scan runs in the background
-   - See the current phase (Solutions, Projects, Assemblies, Dependencies)
+   - See the current phase (Solutions, Projects, Assemblies)
    - Monitor percentage completion
    - View detailed progress log
-5. When complete, click "View Scan Results" to see the detailed scan data
+5. When complete, click "View Scan Results" to see the scan list
 
 ### Viewing Scan Results
 
-After a scan completes, you can view:
+The scan list displays:
 
-- **Solutions**: All solution files with metadata
-- **Projects**: All C# projects with target frameworks and styles
-- **Assemblies**: Output assemblies that will be generated
-- **Dependencies**: Visual dependency graph showing relationships
-- **Assembly Dependencies**: Lower-level assembly-to-assembly dependencies
+- **Scan Date**: When the scan was performed
+- **Repository Path**: The path that was scanned
+- **Git Commit**: The commit hash at the time of scan
 
 ### Example Repository Path
 
@@ -109,7 +103,6 @@ After a scan completes, you can view:
   - Discovers solution and project files
   - Parses XML project files
   - Extracts metadata using regex and XDocument
-  - Builds dependency graphs
   - Persists data to database
 
 ### Data Models
@@ -121,21 +114,19 @@ After a scan completes, you can view:
 ### Controllers
 
 - **HomeController**: Landing page
-- **ScansController**: CRUD operations for scans and viewing results
+- **ScansController**: Create scans and view scan list
 
 ## Comparison to PowerShell Scripts
 
-This application provides equivalent functionality to the PowerShell scripts:
+This application provides a simplified version of the PowerShell scripts functionality:
 
 | PowerShell Script | C# Equivalent |
 |-------------------|---------------|
-| `00_scan-repo.ps1` | Main scan initialization |
 | `01_find-solutions.ps1` | `FindSolutionsAsync()` |
 | `02_find-projects.ps1` | `FindProjectsAsync()` |
 | `03_extract-solution-info.ps1` | `ExtractSolutionInfoAsync()` |
 | `04_extract-project-info.ps1` | `ExtractProjectInfoAsync()` |
 | `05_extract-assembly-info.ps1` | `ExtractAssembliesAsync()` |
-| `06_build-dependency-graph.ps1` | `BuildDependencyGraphAsync()` |
 
 ### Key Differences
 
@@ -180,11 +171,11 @@ For different environments, update `appsettings.json` or `appsettings.Developmen
 
 Possible improvements:
 
+- Add detailed scan views (solutions, projects, assemblies)
+- Add dependency graph building and visualization
 - Export scan results to CSV/Excel
-- Visualize dependency graphs with charts
 - Compare scans to track changes over time
 - Support for additional project types (F#, VB.NET)
-- Async scanning with progress updates via SignalR
 - REST API for programmatic access
 - Docker containerization
 

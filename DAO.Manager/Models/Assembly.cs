@@ -14,6 +14,4 @@ public class Assembly
     
     // Navigation properties
     public Project Project { get; set; } = null!;
-    public ICollection<AssemblyDependency> DependenciesFrom { get; set; } = new List<AssemblyDependency>();
-    public ICollection<AssemblyDependency> DependenciesTo { get; set; } = new List<AssemblyDependency>();
 }

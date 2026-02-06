@@ -13,5 +13,4 @@ public class Solution
     
     // Navigation properties
     public Scan Scan { get; set; } = null!;
-    public ICollection<SolutionProject> SolutionProjects { get; set; } = new List<SolutionProject>();
 }

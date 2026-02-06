@@ -12,6 +12,4 @@ public class Scan
     // Navigation properties
     public ICollection<Solution> Solutions { get; set; } = new List<Solution>();
     public ICollection<Project> Projects { get; set; } = new List<Project>();
-    public ICollection<SolutionProject> SolutionProjects { get; set; } = new List<SolutionProject>();
-    public ICollection<ProjectDependency> ProjectDependencies { get; set; } = new List<ProjectDependency>();
 }
